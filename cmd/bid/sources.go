@@ -40,10 +40,12 @@ func (s *Sources) Less(i, j int) bool {
 
 // Add adds source and its prices to the list
 func (s *Sources) Add(uri string, price int) {
+	s.Lock()
 	s.Data = append(s.Data, &Source{
 		URI:   uri,
 		Price: price,
 	})
+	s.Unlock()
 }
 
 // Winner returns second highest price and source uri which wins providing highest price
