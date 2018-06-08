@@ -17,7 +17,7 @@ const (
 	SourceTimeout = 100
 )
 
-// ProcessSource gets prices from source
+// ProcessSource gets prices from source and find winner
 func ProcessSource(wg *sync.WaitGroup, uri string, sources *Sources) error {
 	defer wg.Done()
 	prices := []*Price{}
@@ -55,7 +55,7 @@ func WinnerHandler(w http.ResponseWriter, r *http.Request) {
 	wg := &sync.WaitGroup{}
 	wg.Add(len(s))
 	for _, uri := range s {
-		ProcessSource(wg, uri, sources)
+		go ProcessSource(wg, uri, sources)
 	}
 	wg.Wait()
 	winner, err := sources.Winner()
@@ -75,7 +75,7 @@ func main() {
 
 	http.HandleFunc("/winner", WinnerHandler)
 
-	fmt.Printf("Start listening on port %d", *port)
+	fmt.Printf("Listen on port %d", *port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
 	if err != nil {
 		log.Fatal(err)

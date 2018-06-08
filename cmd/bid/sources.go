@@ -25,39 +25,31 @@ type Sources struct {
 
 // Len returns length of sources slice (for sorting)
 func (s *Sources) Len() int {
-	s.RLock()
-	defer s.RUnlock()
 	return len(s.Data)
 }
 
 // Swap swaps items with i and j indexes (for sorting)
 func (s *Sources) Swap(i, j int) {
-	s.Lock()
 	s.Data[i], s.Data[j] = s.Data[j], s.Data[i]
-	s.Unlock()
 }
 
 // Less returns true if value from previous index less than next (for sorting, asc)
 func (s *Sources) Less(i, j int) bool {
-	s.RLock()
-	defer s.RUnlock()
 	return s.Data[i].Price < s.Data[j].Price
 }
 
 // Add adds source and its prices to the list
 func (s *Sources) Add(uri string, price int) {
-	s.Lock()
 	s.Data = append(s.Data, &Source{
 		URI:   uri,
 		Price: price,
 	})
-	s.Unlock()
 }
 
 // Winner returns second highest price and source uri which wins providing highest price
 func (s *Sources) Winner() (*Source, error) {
-	s.RLock()
-	defer s.RUnlock()
+	s.Lock()
+	defer s.Unlock()
 	sort.Sort(s)
 	count := len(s.Data)
 	if count > 0 {
