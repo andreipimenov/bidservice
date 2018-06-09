@@ -2,9 +2,16 @@ package main
 
 import (
 	"errors"
+	"net/http"
 	"sort"
 	"sync"
 )
+
+// Clienter is the interface which provide one method Get for
+// retrieving json-syntah response from other sources
+type Clienter interface {
+	Get(uri string) (*http.Response, error)
+}
 
 // Price contains price from source
 type Price struct {
@@ -13,8 +20,8 @@ type Price struct {
 
 // Source is struct for source URI and price
 type Source struct {
-	URI   string
-	Price int
+	URI   string `json:"uri"`
+	Price int    `json:"price"`
 }
 
 // Sources contains list of all sources and its prices
