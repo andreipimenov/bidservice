@@ -76,7 +76,6 @@ curl -X GET 127.0.0.1:8000/winner?s=http://127.0.0.1:8080/primes&s=http://127.0.
 ```
 If no one source responsed correctly (valid json and with less than 100ms), the response is
 ```
-```
 {"code": "InternalServerError", "message": "prices not found, there is no winner"}
 ```
 6. Response timeout can being configured by changing const SourceTimeout
